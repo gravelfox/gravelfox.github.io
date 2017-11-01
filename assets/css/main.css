@@ -48,6 +48,10 @@
 	body {
 		-webkit-text-size-adjust: none;
 	}
+	
+	.techFont {
+		font-size: 8em;
+	}
 
 /* Box Model */
 
@@ -1335,6 +1339,10 @@
 	}
 
 	@media screen and (max-width: 480px) {
+		
+		.techFont {
+			font-size: 6em;
+		}
 
 		.row > * {
 			padding: 0 0 0 1.25em;
@@ -3175,9 +3183,10 @@
 			border-bottom: solid 1px #555;
 
 		}
-		.devicon-python-plain {
+		
+		/*.devicon-python-plain {
 			font-size: 8em;
-		}
+
 		
 		.devicon-csharp-plain {
 			font-size: 8em;
@@ -3194,9 +3203,12 @@
 		.devicon-github-plain {
 			font-size: 8em;
 		}
+				}*/
 		
 		hr {
 			padding: 0;
 			margin: 0;
 		}
+		
+
 		

@@ -11,6 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!-- Disable Microsoft Edge Phone Number Styling (Gross) -->
 		<meta name="format-detection" content="telephone=no"/>
+		<link rel="stylesheet" href="assets/css/bootstrap.css" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
 	<body class="subpage">
@@ -79,7 +80,11 @@
 						</div>
 					</div>
 				</div>
+					<div class="align-center">
+						<a href="./assets/files/Resume.pdf" download="Travis Brooks Resume.PDF" class="button icon fa-download" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Download my resume as a PDF. This is completely free and no credit card is required!">&nbsp;&nbsp;&nbsp;&nbsp;Download</a>
+					</div>	
 			</section>
+
 
 		<!-- Footer -->
 			<footer id="footer">
@@ -118,6 +123,13 @@
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+			<script>
+			$(document).ready(function(){
+				$('[data-toggle="popover"]').popover();   
+			});
+			</script>
 
 	</body>
 </html>

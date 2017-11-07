@@ -3210,5 +3210,9 @@
 			margin: 0;
 		}
 		
+		a:focus {
+			text-decoration: none;
+		}
+		
 
 		

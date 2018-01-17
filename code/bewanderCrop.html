@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<!--
+	Projection by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Code - Travis Brooks</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+		<link rel="stylesheet" href="../assets/css/main.css" />
+		
+	</head>
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<a href="index.html" class="logo"><strong>Code</strong> - Travis Brooks</a>
+					<nav id="nav">
+						<a href="index.html">Home</a>
+						<a href="#" class="activePage activePage2">Code</a>
+						<a href="resume.html">Resume</a>
+					</nav>
+					<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+				</div>
+			</header>
+
+		<!-- Three -->
+			<section id="three" class="wrapper">
+			<div class="container">
+				<a href="../code.html"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;Back to Code Examples...</a>
+			</div>
+				<div class="inner">
+					<header class="align-center">
+						<h2>Bewander Crop Function</h2>
+						<p>Coding examples - Travis Brooks</p>
+					</header>				
+					
+					<p>
+					The Bewander Image Cropping function did not function, though the last dev who had worked on it had pasted 
+					in quite a bit of code that I believe was copied out of a jCrop implementation tutorial, so I continued that 
+					work. The default functionality saved an image into a temp folder and returned the path to the page. I 
+					updated it to save it into the logged-in user's images folder, then update the database to reference the 
+					new file, and finally delete the old image. 
+					</p>
+					<p>
+					During the testing process, I found that when an image was scaled to fit, the jCrop function cropped the 
+					image improperly, and while there was a bloated solution that involved loading in another library, I 
+					added functionality in the javascript to detect a scaled image and account for it.
+					</p>
+					
+					<p>
+					<img src="../images/crop.jpg" class="code-ex-image">
+					</p>
+					
+					<strong>JavaScript</strong>
+					
+					<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #333333">&lt;</span>script<span style="color: #333333">&gt;</span>
+    
+    <span style="color: #008800; font-weight: bold">var</span> imageCropWidth <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+    <span style="color: #008800; font-weight: bold">var</span> imageCropHeight <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+    <span style="color: #008800; font-weight: bold">var</span> cropPointX <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+    <span style="color: #008800; font-weight: bold">var</span> cropPointY <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+    <span style="color: #008800; font-weight: bold">var</span> ratio <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+
+    $(<span style="color: #007020">document</span>).ready(<span style="color: #008800; font-weight: bold">function</span> () {
+        checkScale();
+        initCrop();
+    });
+
+    <span style="color: #888888">//check to see if the image is scaled down, and if so, update </span>
+    <span style="color: #888888">//the ratio variable to the scale of the displayed image</span>
+    <span style="color: #008800; font-weight: bold">function</span> checkScale() {
+        <span style="color: #008800; font-weight: bold">var</span> natWidth <span style="color: #333333">=</span> <span style="color: #007020">document</span>.getElementById(<span style="background-color: #fff0f0">&quot;image-to-crop&quot;</span>).naturalWidth;
+        <span style="color: #008800; font-weight: bold">var</span> dispWidth <span style="color: #333333">=</span> <span style="color: #007020">window</span>.getComputedStyle(<span style="color: #007020">document</span>.getElementById(<span style="background-color: #fff0f0">&quot;image-to-crop&quot;</span>), <span style="color: #008800; font-weight: bold">null</span>)
+            .getPropertyValue(<span style="background-color: #fff0f0">&quot;width&quot;</span>).slice(<span style="color: #0000DD; font-weight: bold">0</span>, <span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">2</span>);
+        <span style="color: #008800; font-weight: bold">if</span> (natWidth <span style="color: #333333">!=</span> dispWidth) {
+            ratio <span style="color: #333333">=</span> dispWidth <span style="color: #333333">/</span> natWidth;
+        }
+    }
+
+    $(<span style="background-color: #fff0f0">&quot;#hl-crop-image&quot;</span>).on(<span style="background-color: #fff0f0">&quot;click&quot;</span>, <span style="color: #008800; font-weight: bold">function</span> (e) {
+        e.preventDefault();
+        cropImage();
+    });
+
+    <span style="color: #008800; font-weight: bold">function</span> initCrop() {
+        $(<span style="background-color: #fff0f0">&#39;#image-to-crop&#39;</span>).Jcrop({
+            addClass<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&#39;jcrop-centered&#39;</span>,
+            onChange<span style="color: #333333">:</span> setCoordsAndImgSize
+        });
+    }
+
+    <span style="color: #008800; font-weight: bold">function</span> setCoordsAndImgSize(e) {
+        imageCropWidth <span style="color: #333333">=</span> <span style="color: #007020">Math</span>.floor(e.w <span style="color: #333333">/</span> ratio);
+        imageCropHeight <span style="color: #333333">=</span> <span style="color: #007020">Math</span>.floor(e.h <span style="color: #333333">/</span> ratio);
+        cropPointX <span style="color: #333333">=</span> <span style="color: #007020">Math</span>.floor(e.x <span style="color: #333333">/</span> ratio);
+        cropPointY <span style="color: #333333">=</span> <span style="color: #007020">Math</span>.floor(e.y <span style="color: #333333">/</span> ratio);
+    }
+
+    <span style="color: #008800; font-weight: bold">function</span> cropImage() {
+
+        <span style="color: #008800; font-weight: bold">if</span> (imageCropWidth <span style="color: #333333">==</span> <span style="color: #0000DD; font-weight: bold">0</span> <span style="color: #333333">||</span> imageCropHeight <span style="color: #333333">==</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+            alert(<span style="background-color: #fff0f0">&quot;Please select crop area.&quot;</span>);
+            <span style="color: #008800; font-weight: bold">return</span>;
+        }
+       
+        $.ajax({
+            url<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&#39;/Images/CropImage&#39;</span>,
+            type<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&#39;POST&#39;</span>,
+            data<span style="color: #333333">:</span> {
+                imagePath<span style="color: #333333">:</span> $(<span style="background-color: #fff0f0">&quot;#image-to-crop&quot;</span>).attr(<span style="background-color: #fff0f0">&quot;src&quot;</span>),
+                cropPointX<span style="color: #333333">:</span> cropPointX,
+                cropPointY<span style="color: #333333">:</span> cropPointY,
+                imageCropWidth<span style="color: #333333">:</span> imageCropWidth,
+                imageCropHeight<span style="color: #333333">:</span> imageCropHeight
+            },
+            success<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">function</span> () {
+                <span style="color: #008800; font-weight: bold">var</span> url <span style="color: #333333">=</span> <span style="background-color: #fff0f0">&#39;@Html.Raw(Url.Action(&quot;ProfilePage&quot;, &quot;Users&quot;, new { userID = Model.UserID, tab = &quot;profile-photos&quot; }))&#39;</span>;
+                <span style="color: #007020">window</span>.location.href <span style="color: #333333">=</span> url;
+            }
+        });
+    }
+
+&lt;/script&gt;
+</pre></td></tr></table></div>
+<br /> <br />
+<strong>C#</strong>
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #0000CC">        [HttpPost]</span>
+        <span style="color: #008800; font-weight: bold">public</span> <span style="color: #008800; font-weight: bold">virtual</span> ActionResult <span style="color: #0066BB; font-weight: bold">CropImage</span>(<span style="color: #333399; font-weight: bold">string</span> imagePath, <span style="color: #333399; font-weight: bold">int?</span> cropPointX, <span style="color: #333399; font-weight: bold">int?</span> cropPointY, <span style="color: #333399; font-weight: bold">int?</span> imageCropWidth, <span style="color: #333399; font-weight: bold">int?</span> imageCropHeight)
+        {
+            <span style="color: #888888">//if any parameters are missing or null, kick it back.</span>
+            <span style="color: #008800; font-weight: bold">if</span> (<span style="color: #333399; font-weight: bold">string</span>.IsNullOrEmpty(imagePath) || !cropPointX.HasValue || !cropPointY.HasValue || !imageCropWidth.HasValue || !imageCropHeight.HasValue)
+            {
+                <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">new</span> <span style="color: #0066BB; font-weight: bold">HttpStatusCodeResult</span>((<span style="color: #333399; font-weight: bold">int</span>)HttpStatusCode.BadRequest);
+            }
+            <span style="color: #888888">//grab the image as an array of bytes</span>
+            <span style="color: #333399; font-weight: bold">byte</span>[] imageBytes = System.IO.File.ReadAllBytes(Server.MapPath(imagePath));
+            <span style="color: #888888">//crop the image</span>
+            <span style="color: #333399; font-weight: bold">byte</span>[] croppedImage = ImageHelper.CropImage(imageBytes, cropPointX.Value, cropPointY.Value, imageCropWidth.Value, imageCropHeight.Value);
+            <span style="color: #888888">//map the path to the images folder for the current user and create a new guid file name</span>
+            <span style="color: #333399; font-weight: bold">string</span> userId = User.Identity.GetUserId();
+            <span style="color: #333399; font-weight: bold">string</span> tempFolderName = <span style="color: #333399; font-weight: bold">string</span>.Concat(Server.MapPath(<span style="background-color: #fff0f0">&quot;~/&quot;</span> + System.Configuration.ConfigurationManager.AppSettings[<span style="background-color: #fff0f0">&quot;Image.ImageFolderName&quot;</span>]), <span style="background-color: #fff0f0">@&quot;\&quot;</span>, userId);
+            <span style="color: #333399; font-weight: bold">string</span> oldFileName = Path.GetFileName(imagePath);
+            <span style="color: #333399; font-weight: bold">string</span> fileExtension = Path.GetExtension(imagePath);
+	    <span style="color: #333399; font-weight: bold">string</span> newFileName = Guid.NewGuid().ToString() + fileExtension;
+            <span style="color: #888888">//update the Files db with the new file name</span>
+            <span style="color: #333399; font-weight: bold">var</span> image = db.Files.FirstOrDefault(p =&gt; p.Path == oldFileName);
+            image.Path = newFileName;
+            db.SaveChanges();
+            <span style="color: #888888">//save the new file</span>
+            <span style="color: #008800; font-weight: bold">try</span>
+            {
+                FileHelper.SaveFile(croppedImage, Path.Combine(tempFolderName, newFileName));
+            }
+            <span style="color: #008800; font-weight: bold">catch</span> (Exception)
+            {
+                <span style="color: #888888">//Log an error     </span>
+                <span style="color: #008800; font-weight: bold">return</span> <span style="color: #008800; font-weight: bold">new</span> <span style="color: #0066BB; font-weight: bold">HttpStatusCodeResult</span>((<span style="color: #333399; font-weight: bold">int</span>)HttpStatusCode.InternalServerError);
+            }
+            <span style="color: #888888">//delete the old image</span>
+            <span style="color: #333399; font-weight: bold">string</span> oldFilePath = HostingEnvironment.MapPath(<span style="background-color: #fff0f0">@&quot;~\Images\&quot;</span> + userId + <span style="background-color: #fff0f0">@&quot;\&quot;</span> + oldFileName);
+            System.IO.File.Delete(oldFilePath);
+
+            <span style="color: #888888">//return the ajax req</span>
+            <span style="color: #333399; font-weight: bold">string</span> photoPath = <span style="color: #333399; font-weight: bold">string</span>.Concat(<span style="background-color: #fff0f0">&quot;/&quot;</span>, System.Configuration.ConfigurationManager.AppSettings[<span style="background-color: #fff0f0">&quot;Image.ImageFolderName&quot;</span>], <span style="background-color: #fff0f0">&quot;/&quot;</span>, userId, <span style="background-color: #fff0f0">&quot;/&quot;</span>, newFileName);
+            <span style="color: #008800; font-weight: bold">return</span> <span style="color: #0066BB; font-weight: bold">Json</span>(<span style="color: #008800; font-weight: bold">new</span> { photoPath = photoPath }, JsonRequestBehavior.AllowGet);
+        }
+</pre></td></tr></table></div>
+
+
+					
+					
+
+			<div class="container">
+			<br />
+				<a href="../code.html"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;Back to Code Examples...</a>
+			</div>
+				
+				</div>
+			</section>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+
+					<div class="copyright">
+						&copy;2018 Travis Brooks. Design: <a href="https://templated.co">TEMPLATED</a>
+					</div>
+
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/skel.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+
+	</body>
+</html>

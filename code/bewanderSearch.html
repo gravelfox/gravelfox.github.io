@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<!--
+	Projection by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Code - Travis Brooks</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+		<link rel="stylesheet" href="../assets/css/main.css" />
+		
+	</head>
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<a href="index.html" class="logo"><strong>Code</strong> - Travis Brooks</a>
+					<nav id="nav">
+						<a href="index.html">Home</a>
+						<a href="#" class="activePage activePage2">Code</a>
+						<a href="resume.html">Resume</a>
+					</nav>
+					<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+				</div>
+			</header>
+
+		<!-- Three -->
+			<section id="three" class="wrapper">
+			<div class="container">
+				<a href="../code.html"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;Back to Code Examples...</a>
+			</div>
+				<div class="inner">
+					<header class="align-center">
+						<h2>Bewander Search Bar</h2>
+						<p>Coding examples - Travis Brooks</p>
+					</header>				
+					
+					The search bar function allowed users to search for other users and returned a list of 
+					users who matched the query with their profile picture and a button whose function 
+					depended on the target user's relationship with the user.<br />
+					<p>
+						<img src="../images/SearchBox.jpg" class="code-ex-image"	>
+					</p>
+					While the methods that retrieved the results from the database existed, 
+					there was no existing functionality to display the results. I retrieved the results 
+					with an ajax request and rendered the viewmodel in a partial:<br />
+					<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.5em;margin:.5em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77</pre></td><td><pre style="margin: 0; line-height: 125%">@model IEnumerable&lt;Bewander.ViewModels.SearchViewModel&gt;
+
+@{
+    <span style="color: #008800; font-weight: bold">if</span> (Model != <span style="color: #008800; font-weight: bold">null</span>)
+    {
+        <span style="color: #008800; font-weight: bold">if</span> (!Model.Any()) <span style="color: #888888">//if there are no results, display that there are no results.</span>
+        {
+            &lt;li&gt;&amp;nbsp;No Results.&lt;/li&gt;
+        }
+        <span style="color: #008800; font-weight: bold">else</span>
+        {
+            <span style="color: #008800; font-weight: bold">foreach</span> (<span style="color: #333399; font-weight: bold">var</span> item <span style="color: #008800; font-weight: bold">in</span> Model)
+            {
+                <span style="color: #008800; font-weight: bold">if</span> (item.FirstName != <span style="color: #008800; font-weight: bold">null</span>)
+                {
+                &lt;li class=<span style="background-color: #fff0f0">&quot;search-list-item&quot;</span>&gt;
+                    &lt;!--profile pic--&gt;
+                    &lt;img class=<span style="background-color: #fff0f0">&quot;img-thumbnail img-responsive img-circle search-result-profile-pic&quot;</span>
+                         onclick=<span style="background-color: #fff0f0">&quot;ViewProfile(&#39;@item.UserID&#39;)&quot;</span> src=<span style="background-color: #fff0f0">&quot;../Images/@item.ProfilePicture&quot;</span> 
+                         alt=<span style="background-color: #fff0f0">&quot;@item.FirstName @item.LastName&quot;</span> /&gt;
+                    &lt;!--name--&gt;
+                    &lt;span class=<span style="background-color: #fff0f0">&quot;search-result-name&quot;</span> onclick=<span style="background-color: #fff0f0">&quot;ViewProfile(&#39;@item.UserID&#39;)&quot;</span>&gt;@item.FirstName @item.LastName&lt;/span&gt;
+
+                    &lt;!--adds a chat, <span style="color: #008800; font-weight: bold">add</span> friend, or pending button depending on relationship status
+                        NOTE: <span style="color: #008800; font-weight: bold">if</span> users should be able to chat regardless of relationship status, update the
+                        <span style="background-color: #fff0f0">&quot;strangersCanChat&quot;</span> <span style="color: #008800; font-weight: bold">value</span> <span style="color: #008800; font-weight: bold">in</span> the web.config file to <span style="background-color: #fff0f0">&quot;true&quot;</span>.--&gt;
+                    
+                    @if (item.Status == <span style="color: #6600EE; font-weight: bold">1</span> ||
+                        System.Configuration.ConfigurationManager.AppSettings[<span style="background-color: #fff0f0">&quot;strangersCanChat&quot;</span>] == <span style="background-color: #fff0f0">&quot;true&quot;</span>)
+                    {
+                        &lt;!--If target user <span style="color: #008800; font-weight: bold">is</span> a friend, or strangersCanChat <span style="color: #008800; font-weight: bold">is</span> <span style="color: #008800; font-weight: bold">set</span> to <span style="background-color: #fff0f0">&quot;true&quot;</span>.--&gt;
+                        &lt;div class=<span style="background-color: #fff0f0">&quot;friend-btn-container search-result-name&quot;</span>&gt;
+                            &lt;a class=<span style="background-color: #fff0f0">&quot;friend-request-btn&quot;</span> onclick=<span style="background-color: #fff0f0">&quot;SelectUser(&#39;@item.RelationshipID&#39;,&#39;@item.UserID&#39;)&quot;</span>&gt;Chat&lt;/a&gt;
+                        &lt;/div&gt;
+                    }
+                    @if (item.Status == <span style="color: #6600EE; font-weight: bold">4</span> &amp;&amp;
+                        System.Configuration.ConfigurationManager.AppSettings[<span style="background-color: #fff0f0">&quot;strangersCanChat&quot;</span>] == <span style="background-color: #fff0f0">&quot;false&quot;</span>)
+                    {
+                        &lt;!--If no relationship exists with target user and strangersCanChat <span style="color: #008800; font-weight: bold">is</span> <span style="color: #008800; font-weight: bold">set</span> to <span style="background-color: #fff0f0">&quot;false&quot;</span>.--&gt;
+                        &lt;div class=<span style="background-color: #fff0f0">&quot;friend-btn-container search-result-name&quot;</span>&gt;
+                            &lt;a class=<span style="background-color: #fff0f0">&quot;add-friend-btn&quot;</span> id=<span style="background-color: #fff0f0">&quot;add-friend-btn-@item.UserID&quot;</span> 
+                                onclick=<span style="background-color: #fff0f0">&quot;AddFriend(&#39;@item.UserID&#39;)&quot;</span>&gt;Add Friend&lt;/a&gt;
+                        &lt;/div&gt;
+                    }
+                    @if (item.Status == <span style="color: #6600EE; font-weight: bold">0</span> &amp;&amp;
+                        System.Configuration.ConfigurationManager.AppSettings[<span style="background-color: #fff0f0">&quot;strangersCanChat&quot;</span>] == <span style="background-color: #fff0f0">&quot;false&quot;</span>)
+                    {
+                        &lt;!--If there <span style="color: #008800; font-weight: bold">is</span> a pending friend request and strangersCanChat <span style="color: #008800; font-weight: bold">is</span> <span style="color: #008800; font-weight: bold">set</span> to <span style="background-color: #fff0f0">&quot;false&quot;</span>.--&gt;
+                        &lt;div class=<span style="background-color: #fff0f0">&quot;friend-btn-container search-result-name&quot;</span>&gt;
+                            &lt;a class=<span style="background-color: #fff0f0">&quot;add-friend-btn&quot;</span> id=<span style="background-color: #fff0f0">&quot;add-friend-btn-@item.UserID&quot;</span>&gt;Pending&lt;/a&gt;
+                        &lt;/div&gt;
+                    }
+                &lt;/li&gt;
+                }
+                <span style="color: #008800; font-weight: bold">else</span>
+                {
+                    &lt;!--<span style="color: #008800; font-weight: bold">if</span> the returned result has no firstName prop, then it <span style="color: #008800; font-weight: bold">is</span> a place,
+                        display it <span style="color: #008800; font-weight: bold">as</span> such:--&gt;
+                    &lt;li class=<span style="background-color: #fff0f0">&quot;search-list-item&quot;</span> onclick=<span style="background-color: #fff0f0">&quot;ViewPlace(&#39;@item.PlaceID&#39;)&quot;</span>&gt;
+                        &lt;a&gt;&lt;img src=<span style="background-color: #fff0f0">&quot;~/Images/Global/Icon.gif&quot;</span> /&gt;&lt;h5&gt;@item.PlaceName&lt;/h5&gt;&lt;/a&gt;
+                    &lt;/li&gt;
+                }
+            }
+        }
+    }
+    <span style="color: #008800; font-weight: bold">else</span>
+    {
+        <span style="color: #888888">//If user is not logged in:</span>
+        &lt;li class=<span style="background-color: #fff0f0">&quot;search-list-item&quot;</span>&gt;
+            Please 
+            @Html.ActionLink(<span style="background-color: #fff0f0">&quot;Log in&quot;</span>, <span style="background-color: #fff0f0">&quot;Login&quot;</span>, <span style="background-color: #fff0f0">&quot;Account&quot;</span>, routeValues: <span style="color: #008800; font-weight: bold">null</span>, htmlAttributes: <span style="color: #008800; font-weight: bold">new</span> { id = <span style="background-color: #fff0f0">&quot;loginLink&quot;</span> }) 
+            or    
+            @Html.ActionLink(<span style="background-color: #fff0f0">&quot;Register&quot;</span>, <span style="background-color: #fff0f0">&quot;Register&quot;</span>, <span style="background-color: #fff0f0">&quot;Account&quot;</span>, routeValues: <span style="color: #008800; font-weight: bold">null</span>, htmlAttributes: <span style="color: #008800; font-weight: bold">new</span> { id = <span style="background-color: #fff0f0">&quot;registerLink&quot;</span> }) 
+            to search.
+        &lt;/li&gt;
+    }
+}
+</pre></td></tr></table></div>
+
+			<div class="container">
+				<a href="../code.html"><span class="glyphicon glyphicon-share-alt"></span>&nbsp;Back to Code Examples...</a>
+			</div>
+				
+				</div>
+			</section>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+
+					<div class="copyright">
+						&copy;2018 Travis Brooks. Design: <a href="https://templated.co">TEMPLATED</a>
+					</div>
+
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/skel.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+
+	</body>
+</html>

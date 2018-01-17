@@ -3166,6 +3166,7 @@
 
 		}
 		
+		
 		.image {
 			text-align: center;
 		}
@@ -3213,6 +3214,52 @@
 		a:focus {
 			text-decoration: none;
 		}
-		
 
-		
+.code-ex-image {
+	max-width: 100%;
+	margin: 10px;
+}
+
+.glyphicon-share-alt{
+	transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
+}
+
+.language-panel{
+	margin: 5px 0;
+}
+
+.language-panel .content {
+	padding-right: .75em;
+	padding-bottom: .75em;
+}
+
+
+@media (max-width: 799px) {
+	.image.center{
+		float: none;
+		margin: 10px auto 5px;
+		width: 100%;
+		padding: 0;
+	}
+	.techFont{
+		font-size: 4em;
+	}
+	.content{
+		width: 100%;
+	}
+}
+
+@media (min-width: 800px) {
+	.image.center{
+		margin: 10px 0 5px;
+	}
+	.techFont{
+		font-size: 6em;
+	}
+	.language-panel .content {
+		padding-top: .75em;
+	}
+}
